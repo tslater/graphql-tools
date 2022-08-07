@@ -1,4 +1,4 @@
-code[class*='language-'],
+/* code[class*='language-'],
 pre[class*='language-'] {
   white-space: pre-wrap !important;
   word-break: break-word !important;
@@ -25,4 +25,7 @@ code {
 .chakra-text a {
   font-weight: 700;
   color: blue;
-}
+} */
+
+@tailwind components;
+@tailwind utilities;

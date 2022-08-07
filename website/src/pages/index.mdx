@@ -1,0 +1,66 @@
+import { FC } from 'react'
+import { HeroGradient, FeatureList, handlePushRoute } from '@theguild/components'
+
+<HeroGradient
+  title="A set of utilities for faster development of GraphQL Schemas"
+  description="GraphQL Tools is a set of NPM packages and an opinionated structure for how to build a GraphQL schema and resolvers in JavaScript, following the GraphQL-first development workflow."
+  link={{
+    children: 'Get Started',
+    title: 'Learn more about GraphQL Tools',
+    href: '/docs/introduction',
+    onClick: e => handlePushRoute('/docs/introduction', e)
+  }}
+  colors={['#000246', '#184BE6']}
+/>
+<FeatureList
+  items={[
+    {
+      title: 'GraphQL-first philosophy',
+      description:
+        'Use the GraphQL schema definition language to generate a schema with full support for resolvers, interfaces, unions, and custom scalars.',
+      image: {
+        src: '/assets/graphql.svg',
+        alt: 'GraphQL-first',
+        loading: 'lazy'
+      },
+      link: {
+        href: '/docs/generate-schema',
+        onClick: e => handlePushRoute('/docs/generate-schema', e),
+        title: 'Read more',
+        children: 'Read more'
+      }
+    },
+    {
+      title: 'Mock your GraphQL API',
+      description:
+        'With GraphQL Tools, you can mock your GraphQL API with fine-grained per-type mocking for fast prototyping without any datasources.',
+      image: {
+        src: '/assets/needle.svg',
+        alt: 'needle',
+        loading: 'lazy'
+      },
+      link: {
+        href: '/docs/mocking',
+        onClick: e => handlePushRoute('/docs/mocking', e),
+        title: 'Read more',
+        children: 'Read more'
+      }
+    },
+    {
+      title: 'Stitch multiple schemas',
+      description:
+        'Automatically stitch multiple schemas together into one larger API in a simple, fast and powerful way.',
+      image: {
+        src: '/assets/flask.svg',
+        alt: 'flask',
+        loading: 'lazy'
+      },
+      link: {
+        href: '/docs/schema-stitching',
+        onClick: e => handlePushRoute('/docs/schema-stitching', e),
+        title: 'Read more',
+        children: 'Read more'
+      }
+    }
+  ]}
+/>
