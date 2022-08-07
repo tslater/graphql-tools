@@ -1,17 +1,12 @@
----
-id: schema-wrapping
-title: Schema wrapping
-description: Wrap schemas to automatically modify schemas, requests and results
-type: Guide
----
+# Schema Wrapping
 
 Schema wrapping (`@graphql-tools/wrap`) creates a modified version of a schema that proxies, or "wraps", the original unmodified schema. This technique is particularly useful when the original schema _cannot_ be changed, such as with [remote schemas](/docs/remote-schemas/).
 
-Schema wrapping works by creating a new "gateway" schema that simply delegates all operations to the original subschema. A series of _transforms_ are applied that may modify the shape of the gateway schema and all proxied operations; these operational transforms may modify an operation prior to delegation, or modify the subschema result prior to its return.
+Schema wrapping works by creating a new "gateway" schema that simply delegates all operations to the original subschema. A series of _transforms_ are applied that may modify the shape of the gateway schema and all proxied operations; these operational transforms may modify an operation before delegation, or modify the subschema result before its return.
 
-Note that [schema stitching](/docs/stitch-combining-schemas) is a _superset_ of the wrapping API. If you want to combine multiple services (with optional transforms) into one combined gateway schema, then you should use the [stitchSchemas](/docs/stitch-combining-schemas) method directly and allow it to handle all of the subservice wrappings.
+Note that [schema stitching](/docs/stitch-combining-schemas) is a _superset_ of the wrapping API. If you want to combine multiple services (with optional transforms) into one combined gateway schema, then you should use the [stitchSchemas](/docs/stitch-combining-schemas) method directly and allow it to handle all of the subsurface wrappings.
 
-## Getting started
+## Getting Started
 
 Let's consider changing the name of a type in a simple schema. In this example, we'd like to replace all instances of type `Widget` with `NewWidget`.
 
@@ -81,13 +76,13 @@ const schema = wrapSchema({
 })
 ```
 
-## Built-in transforms
+## Built-in Transforms
 
 These are ready-made classes implementing the `Transform` interface. They are intended to cover many common use cases, and they may also serve as examples of how to implement your own [custom transforms](#custom-transforms).
 
 ### Filtering
 
-Filter transforms are constructed with a filter function that returns a boolean. The transform executes the filter on each schema element within its scope, and rejects elements that do not pass the filter.
+Filter transforms are constructed with a filter function that returns a boolean. The transform executes the filter on each schema element within its scope and rejects elements that do not pass the filter.
 
 - [`FilterTypes`](/docs/api/classes/wrap_src.filtertypes): filters all element types.
 - [`FilterRootFields`](/docs/api/classes/wrap_src.filterrootfields): filters fields on the root Query, Mutation, and Subscription objects.
@@ -122,7 +117,7 @@ const schema = wrapSchema({
 
 ### Renaming
 
-Renaming transforms are constructed with a renamer function that returns a string. The transform executes the renamer on each schema element within its scope, and applies the revised names to gateway schema elements. If a renamer returns `undefined`, the name will be left unchanged. Additional options may control whether built-in types and scalars are renamed, see linked API docs.
+Renaming transforms are constructed with a renamer function that returns a string. The transform executes the renamer on each schema element within its scope and applies the revised names to gateway schema elements. If a renamer returns `undefined`, the name will be left unchanged. Additional options may control whether built-in types and scalars are renamed, see linked API docs.
 
 - [`RenameTypes`](/docs/api/classes/wrap_src.renametypes): renames all element types.
 - [`RenameRootTypes`](/docs/api/classes/wrap_src.renameroottypes): renames the root Query, Mutation, and Subscription types.
@@ -160,7 +155,7 @@ const schema = wrapSchema({
 
 ### Modifying
 
-Modifying transforms allow element names and their definitions to be modified or omitted. They may filter, rename, and make other freeform modifications all at once. These transforms accept element transformer functions that may return one of several outcomes:
+Modifying transforms allows element names and their definitions to be modified or omitted. They may filter, rename, and make other freeform modifications all at once. These transforms accept element transformer functions that may return one of several outcomes:
 
 1. A modified version of the element config.
 2. An array with a modified field name and new element config.
@@ -204,7 +199,7 @@ These transforms accept an optional second node transformer function. When speci
 
 ### Grooming
 
-These transforms eliminate unwanted or unnecessary elements from a schema. These are configured in a variety of ways, so consult API documentation for specific options.
+These transforms eliminate unwanted or unnecessary elements from a schema. These are configured in a variety of ways, so consult the API documentation for specific options.
 
 - [`PruneSchema`](/docs/api/classes/wrap_src.pruneschema): eliminates unreachable elements from the schema. This is generally useful to include _after_ a filter transform so that orphaned types and values are eliminated from the schema. Accepts [pruneSchema](/docs/api/modules/utils#pruneschema) options.
 - [`RemoveObjectFieldDeprecations`](/docs/api/classes/wrap_src.removeobjectfielddeprecations): accepts a string or regex describing a deprecation to remove from the gateway schema. Fields matching this deprecation will be un-deprecated. Useful for normalizing [computed fields](/docs/stitch-type-merging#computed-fields) that are activated by the gateway wrapper.
@@ -236,11 +231,11 @@ const schema = wrapSchema({
 
 ### Operational
 
-It may be sometimes useful to add additional transforms to manually change an operation request or result when using `delegateToSchema`. Common use cases may be move selections around or to wrap them. The following built-in transforms may be useful in those cases.
+It may be sometimes useful to add additional transforms to manually change an operation request or result when using `delegateToSchema`. Common use cases may be moving selections around or to wrap them. The following built-in transforms may be useful in those cases.
 
 - `WrapFields('ParentType', ['scope'], ['ScopeType'], ['field1', 'field2', ...])` wraps a collection of fields on a parent type in one or more wrapping scopes with given namespaces and object types.
 - `ExtractField({ from: Array<string>, to: Array<string> })` move selection at `from` path to `to` path.
-- `WrapQuery(path: Array<string>, wrapper: QueryWrapper, extractor: (result: any) => any)` wrap a selection at `path` using function `wrapper`. Apply `extractor` at the same path to get the result. This is used to get a result nested inside other result.
+- `WrapQuery(path: Array<string>, wrapper: QueryWrapper, extractor: (result: any) => any)` wrap a selection at `path` using function `wrapper`. Apply `extractor` at the same path to get the result. This is used to get a result nested inside another result.
 
 ```js
 const {
@@ -269,7 +264,7 @@ transforms: [
 ],
 ```
 
-`WrapQuery` can also be used to expand multiple top level query fields
+`WrapQuery` can also be used to expand multiple top-level query fields
 
 ```ts
 import { WrapQuery } from '@graphql-tools/wrap';
@@ -312,13 +307,13 @@ transforms: [
     })
 ```
 
-## Custom transforms
+## Custom Transforms
 
-Custom transforms are fairly straightforward to write. They are simply objects with up to three methods:
+Custom transforms are fairly straightforward to write. They simply object with up to three methods:
 
 - `transformSchema`: receives the original subschema and applies modifications to it, returning a modified wrapper (proxy) schema. This method runs once while initially wrapping the subschema.
-- `transformRequest`: receives each request made to the wrapped schema. The shape of a request matches the wrapper schema, and must be returned in a shape that matches the original subschema.
-- `transformResult`: receives each result returned from the original subschema. The shape of the result matches the original subschema, and must be returned in a shape that matches the wrapper schema.
+- `transformRequest`: receives each request made to the wrapped schema. The shape of a request matches the wrapper schema and must be returned in a shape that matches the original subschema.
+- `transformResult`: receives each result returned from the original subschema. The shape of the result matches the original subschema and must be returned in a shape that matches the wrapper schema.
 
 The complete transform object API is as follows:
 
@@ -384,12 +379,12 @@ const schema = wrapSchema({
 })
 ```
 
-## Subschema delegation
+## Subschema Delegation
 
-The `wrapSchema` method will produce a new schema with all queued `transformSchema` methods applied. Delegating resolvers are automatically generated to map from new schema root fields to old schema root fields. These resolvers should be sufficient for most common case so you don't have to implement your own.
+The `wrapSchema` method will produce a new schema with all queued `transformSchema` methods applied. Delegating resolvers are automatically generated to map from new schema root fields to old schema root fields. These resolvers should be sufficient for the most common case so you don't have to implement your own.
 
-Delegating resolvers will apply all operation transforms defined by the wrapper's `Transform` objects. Each provided `transformRequest` functions will be applies in reverse order, until the request matches the original schema. The `transformResult` functions will be applied in the opposite order until the result matches the final gateway schema.
+Delegating resolvers will apply all operation transforms defined by the wrapper's `Transform` objects. Each provided `transformRequest` function will be applied in reverse order until the request matches the original schema. The `transformResult` functions will be applied in the opposite order until the result matches the final gateway schema.
 
-In advanced cases, transforms may wish to create additional delegating root resolvers (for example, when hoisting a field into a root type). This is also possible. The wrapping schema is actually generated twice -- the first run results in a possibly non-executable version, while the second execution also includes the result of the first one within the `transformedSchema` argument so that an executable version with any new proxying resolvers can be created.
+In advanced cases, transforms may wish to create additional delegating root resolvers (for example, when hoisting a field into a root type). This is also possible. The wrapping schema is generated twice -- the first run results in a possibly non-executable version, while the second execution also includes the result of the first one within the `transformedSchema` argument so that an executable version with any new proxying resolvers can be created.
 
-Remote schemas can also be wrapped! In fact, this is the primary use case. See documentation regarding [remote schemas](/docs/remote-schemas/) for further details about remote schemas. Note that as explained there, when wrapping remote schemas, you will be wrapping a subschema config object, and the array of transforms should be defined on that object rather than as a second argument to `wrapSchema`.
+Remote schemas can also be wrapped! This is the primary use case. See documentation regarding [remote schemas](/docs/remote-schemas/) for further details about remote schemas. Note that as explained there, when wrapping remote schemas, you will be wrapping a subschema config object, and the array of transforms should be defined on that object rather than as a second argument to `wrapSchema`.

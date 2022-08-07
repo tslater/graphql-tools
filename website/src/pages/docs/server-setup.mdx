@@ -1,11 +1,6 @@
----
-id: server-setup
-title: Setup an HTTP server
-sidebar_label: Setup an HTTP server
-type: Guide
----
+# Setup an HTTP Server
 
-Here's an example using **GraphQL Yoga**:
+## GraphQL Yoga Example:
 
 ```js
 const { createServer } = require('@graphql-yoga/node')
@@ -24,7 +19,9 @@ const server = createServer({ schema })
 server.start()
 ```
 
-And you can test your queries using built-in [GraphiQL](https://github.com/graphql/graphiql/tree/master/packages/graphiql);
+And you can test your queries using built-in [GraphiQL](https://github.com/graphql/graphiql/tree/master/packages/graphiql):
+
+<br />
 
 <iframe
   src="https://codesandbox.io/s/github/dotansimha/graphql-yoga/tree/master/examples/hello-world"
@@ -34,7 +31,7 @@ And you can test your queries using built-in [GraphiQL](https://github.com/graph
   sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
 ></iframe>
 
-## Adding Subscriptions support
+## Adding Subscriptions Support
 
 You can check **GraphQL Yoga**'s dedicated docs for more information about Subscriptions;
 https://www.graphql-yoga.com/docs/features/subscriptions#subscriptions

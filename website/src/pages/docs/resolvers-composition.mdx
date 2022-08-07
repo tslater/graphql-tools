@@ -1,9 +1,4 @@
----
-id: resolvers-composition
-title: Resolvers composition
-sidebar_label: Resolvers composition
-type: Guide
----
+# Resolvers Composition
 
 Composition tool for GraphQL, with helpers to combine multiple resolvers into one, specify dependencies between fields, and more.
 
@@ -80,9 +75,9 @@ const composedResolvers = composeResolvers(resolvers, resolversComposition)
 
 `composeResolvers` is a method in `@graphql-tools/resolvers-composition` package that accepts `IResolvers` object and mappings for composition functions that would be run before resolver itself.
 
-### Supported path matcher format
+## Supported Path Matcher Format
 
-The paths for resolvers support `*` wildcard for types and glob patters for fields, eg:
+The paths for resolvers support `*` wildcard for types and glob patterns for fields. For example:
 
 - `*.*` - all types and all fields
 - `Query.*` - all queries

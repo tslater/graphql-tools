@@ -1,14 +1,10 @@
----
-id: migration-from-import
-title: Migration from GraphQL Import
-sidebar_label: From GraphQL Import
-description: Migration from GraphQL Import
-type: Guide
----
+import { Callout } from '@theguild/components'
 
-GraphQL Import was an NPM package that allows you import and export definitions using `#import` syntax in `.graphql` files. So this package has been moved under GraphQL Tools monorepo. It is really easy to migrate. You need two different packages `@graphql-tools/load` and `@graphql-tools/graphql-file-loader`.
+# Migration from GraphQL Import
 
-Before;
+GraphQL Import was an NPM package that allows you to import and export definitions using `#import` syntax in `.graphql` files. So this package has been moved under GraphQL Tools monorepo. It is really easy to migrate. You need two different packages `@graphql-tools/load` and `@graphql-tools/graphql-file-loader`.
+
+## Before
 
 ```ts
 import { importSchema } from 'graphql-import'
@@ -24,7 +20,7 @@ const resolvers = {
 const schema = makeExecutableSchema({ typeDefs, resolvers })
 ```
 
-After;
+## After
 
 ```ts
 import { loadSchemaSync } from '@graphql-tools/load'
@@ -45,4 +41,6 @@ const schemaWithResolvers = addResolversToSchema({
 })
 ```
 
-You can learn more about those new packages in [Schema Loading](/docs/schema-loading) section.
+<Callout type="info">
+  You can learn more about those new packages in [Schema Loading](/docs/schema-loading) section.
+</Callout>

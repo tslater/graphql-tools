@@ -1,15 +1,10 @@
----
-id: stitch-directives-sdl
-title: Directives SDL
-sidebar_label: Directives SDL
-type: Guide
----
+# Directives SDL
 
-Stitching directives (`@graphql-tools/stitching-directives`) may be used to configure a stitched gateway directly through the Schema Definition Language (SDL) of its subservices. The advantage of this approach is that all schema _and type merging configuration_ is represented in a single document managed by each subservice, and can be reloaded by the gateway on the fly without a formal deploy or server restart.
+Stitching directives (`@graphql-tools/stitching-directives`) may be used to configure a stitched gateway directly through the Schema Definition Language (SDL) of its sub-service. The advantage of this approach is that all schema _and type merging configuration_ is represented in a single document managed by each sub-service, and can be reloaded by the gateway on the fly without a formal deployment or server restart.
 
 ## Overview
 
-Using SDL directives, a subservice may express its complete schema _and type merging configuration_ in a single document. See related [handbook example](https://github.com/gmac/schema-stitching-handbook/tree/master/stitching-directives-sdl) for a working demonstration.
+Using SDL directives, a sub-service may express its complete schema _and type merging configuration_ in a single document. See related [handbook example](https://github.com/gmac/schema-stitching-handbook/tree/master/stitching-directives-sdl) for a working demonstration.
 
 ```graphql
 # --- Users schema ---
@@ -41,9 +36,9 @@ type Query {
 }
 ```
 
-In the above example, the Users and Posts schemas will be combined in the stitched gateway and provide all of their own merged type configuration. All SDL directives will translate directly into the static configurations discussed in [type merging docs](/docs/stitch-type-merging). See the [recipes](#recipes) section below for some common patterns.
+In the above example, the Users and Posts schemas will be combined in the stitched gateway and provide all of their merged type configurations. All SDL directives will translate directly into the static configurations discussed in [type merging docs](/docs/stitch-type-merging). See the [recipes](#recipes) section below for some common patterns.
 
-## Directives glossary
+## Directives Glossary
 
 By default, stitching directives use the following definitions (though the names of these directives [may be customized](#customizing-directive-names)):
 
@@ -67,7 +62,7 @@ The function of these directives are:
   - `keyField`: specifies the name of a field to pick off origin objects as the key value. When omitted, a `@key` directive must be included on the return type's definition to be built into an [object key](#object-keys).
   - `keyArg`: specifies which field argument receives the merge key. This may be omitted for fields with only one argument where the recipient can be inferred.
   - `additionalArgs`: specifies a string of additional keys and values to apply to other arguments, formatted as `""" arg1: "value", arg2: "value" """`.
-  - _`key`: advanced use only;_ Allows building a custom key just for the argument from the selectionSet included by the `@key` directive.
+  - _`key`: advanced use only;_ Allows building a custom key just for the argument from the selection included by the `@key` directive.
   - _`argsExpr`: advanced use only;_ This argument specifies a string expression that allows more customization of the input arguments. Rules for evaluation of this argument are as follows:
     - basic object parsing of the input key: `"arg1: $key.arg1, arg2: $key.arg2"`
     - any expression enclosed by double brackets will be evaluated once for each of the requested keys, and then sent as a list: `"input: { keys: [[$key]] }"`
@@ -79,9 +74,9 @@ The function of these directives are:
 
 - **`@canonical`:** specifies types and fields that provide a [canonical definition](/docs/stitch-type-merging#canonical-definitions) to be built into the gateway schema. Useful for selecting preferred characteristics among types and fields that overlap across subschemas. Root fields marked as canonical specify which subschema the field proxies for new queries entering the graph.
 
-#### Customizing directive names
+#### Customizing Directive Names
 
-You may use the `stitchingDirectives` helper to build your own type definitions and validator with custom names. For example, the configuration below creates the resources for `@myKey`, `@myMerge`, and `@myComputed` directives:
+You may use the `stitchingDirectives` helper to build your type definitions and validator with custom names. For example, the configuration below creates the resources for `@myKey`, `@myMerge`, and `@myComputed` directives:
 
 ```js
 const { stitchingDirectives } = require('@graphql-tools/stitching-directives')
@@ -92,13 +87,13 @@ const { allStitchingDirectivesTypeDefs, stitchingDirectivesValidator } = stitchi
 })
 ```
 
-## Schema setup
+## Schema Setup
 
 To setup stitching directives, you'll need to install their definitions into each subschema, and then add a transformer to the stitched gateway that reads them. See related [handbook example](https://github.com/gmac/schema-stitching-handbook/tree/master/stitching-directives-sdl) for a complete demonstration.
 
-### Subservice setup
+### Subservice Setup
 
-When setting up a subservice, you'll need to do three things:
+When setting up a sub-service, you'll need to do three things:
 
 ```js
 const { makeExecutableSchema } = require('@graphql-tools/schema')
@@ -133,7 +128,7 @@ module.exports = stitchingDirectivesValidator(schema)
 2. Include a `stitchingDirectivesValidator` in your executable schema (highly recommended).
 3. Setup a query field that returns the schema's raw type definitions string (see the `_sdl` field example above). This field is extremely important for exposing the annotated SDL to your stitched gateway. Unfortunately, custom directives cannot be obtained through schema introspection.
 
-### Gateway setup
+### Gateway Setup
 
 When setting up the stitched gateway, you'll need to do two things:
 
@@ -187,7 +182,7 @@ async function fetchRemoteSchema(executor) {
 
 ## Recipes
 
-### Picked keys
+### Picked Keys
 
 The simplest merge pattern picks a key field from origin objects:
 
@@ -226,7 +221,7 @@ merge: {
 }
 ```
 
-### Multiple arguments
+### Multiple Arguments
 
 This pattern configures a merge query that receives multiple arguments:
 
@@ -260,7 +255,7 @@ merge: {
 }
 ```
 
-### Object keys
+### Object Keys
 
 In the absence of a `keyField` for the merge directive to pick, keys will assume the shape of an object with a `__typename` and all fields collected for utilized selectionSets on the type:
 
@@ -277,7 +272,7 @@ type Query {
 }
 ```
 
-The above SDL specifies a type-level selectionSet using the `@key` directive, and a field-level selectionSet using the `@computed` directive. The `@merge` directive takes no arguments here, and will build object keys with fields collected from all utilized selectionSets. These object keys are passed to the merger field as a custom scalar (here called `_Key`), or as an [input object](#typed-inputs). This SDL translates into the following merge config:
+The above SDL specifies a type-level selectionSet using the `@key` directive, and a field-level selectionSet using the `@computed` directive. The `@merge` directive takes no arguments here and will build object keys with fields collected from all utilized selectionSets. These object keys are passed to the merger field as a custom scalar (here called `_Key`), or as an [input object](#typed-inputs). This SDL translates into the following merge config:
 
 ```js
 // assume "pick" works like the lodash method...
@@ -296,10 +291,11 @@ merge: {
 
 Each generated object key will have a `__typename` and all _utilized_ selectionSet fields on the type. For example, when the `shippingEstimate` field is requested, the resulting object keys will look like this:
 
-/* Prettier adds `;` at the beginning */
-/* prettier-ignore */
+/_ Prettier adds `;` at the beginning _/
+/_ prettier-ignore _/
+
 ```js
-[
+;[
   { __typename: 'Product', upc: '1', price: 899, weight: 100 },
   { __typename: 'Product', upc: '2', price: 1299, weight: 1000 }
 ]
@@ -307,16 +303,17 @@ Each generated object key will have a `__typename` and all _utilized_ selectionS
 
 However, when `shippingEstimate` is NOT requested, the generated object keys will only contain fields from the base selectionSet:
 
-/* Prettier adds `;` at the beginning */
-/* prettier-ignore */
+/_ Prettier adds `;` at the beginning _/
+/_ prettier-ignore _/
+
 ```js
-[
+;[
   { __typename: 'Product', upc: '1' },
   { __typename: 'Product', upc: '2' }
 ]
 ```
 
-### Typed inputs
+### Typed Inputs
 
 Similar to the [object keys](#object-keys) discussed above, an input object type may be used in place of a generic scalar to cast object keys with a specific schema:
 
@@ -356,16 +353,17 @@ merge: {
 
 These typed inputs follow the same behavior as object keys with regards to only including fields from _utilized_ selectionSets. The resulting objects will only ever include fields whitelisted by their input schema, and are subject to nullability mismatch errors:
 
-/* Prettier adds `;` at the beginning */
-/* prettier-ignore */
+/_ Prettier adds `;` at the beginning _/
+/_ prettier-ignore _/
+
 ```js
-[
+;[
   { upc: '1', price: 899, weight: 100 },
   { upc: '2', price: 1299, weight: 1000 }
 ]
 ```
 
-### Nested inputs
+### Nested Inputs
 
 More advanced cases may need to interface with complex inputs. In these cases, the `keyArg` may specify a namespaced path at which to send the merge key:
 
@@ -395,7 +393,7 @@ However, pushing untested SDLs directly to the gateway is risky due to the poten
 
 **The general process for zero-downtime rollouts is:**
 
-1. Compose and test all subschema head versions together to verify their combined stability prior to release.
-1. Deploy all updated subservice applications while keeping their existing subschema features operational.
+1. Compose and test all subschema head versions together to verify their combined stability before release.
+1. Deploy all updated sub-service applications while keeping their existing subschema features operational.
 1. Push all updated subschema SDLs to the gateway as a single cutover.
-1. Decommission old subservices, and/or outdated subservice features.
+1. Decommission old sub-services, and/or outdated sub-service features.

@@ -1,13 +1,15 @@
----
-id: remote-schemas
-title: Remote schemas
-description: Generate GraphQL schema objects that delegate to a remote server
-type: Guide
----
+import { Callout } from '@theguild/components'
+
+# Remote Schemas
 
 It can be valuable to be able to treat remote GraphQL endpoints as if they were local executable schemas. This is especially useful for [schema stitching](/docs/stitch-api), but there may be other use cases.
 
-> Watch [Episode #12 of `graphql.wtf`](https://graphql.wtf/episodes/12-graphql-remote-schema-stitching) for a quick introduction to remote schemas:
+<Callout type="info">
+  Watch [Episode #12 of `graphql.wtf`](https://graphql.wtf/episodes/12-graphql-remote-schema-stitching) for a quick
+  introduction to remote schemas:
+</Callout>
+
+<br />
 
 <iframe
   width="100%"
@@ -19,21 +21,21 @@ It can be valuable to be able to treat remote GraphQL endpoints as if they were 
   allowFullScreen
 ></iframe>
 
-There two ways to create remote schemas;
+There are two ways to create remote schemas;
 
-## Use Loaders to load schemas easily
+## Use Loaders to Load Schemas Easily
 
 Check out [Schema Loading](/docs/schema-loading) to load schemas from an URL and/or different sources easily without implementing an executor.
 
-## Create a remote executable schema with custom executor methods
+## Create a Remote Executable Schema With Custom Executor Methods
 
-Generally, to create a remote schema, you generally need just three steps:
+Generally, to create a remote schema, you need just three steps:
 
 1. Create a [executor](#creating-an-executor) that can retrieve results from that schema
 2. Use [`introspectSchema`](#introspectschemaexecutor-context) to get the non-executable schema of the remote server
 3. Use [`wrapSchema`](#wrapschemaschemaconfig) to create a schema that uses the executor to delegate requests to the underlying service
 
-### Creating an executor
+### Creating an Executor
 
 You can use an executor with an HTTP Client implementation (like cross-fetch). An executor is a function capable of retrieving GraphQL results. It is the same way that a GraphQL Client handles fetching data and is used by several `graphql-tools` features to do introspection or fetch results during execution.
 
@@ -50,7 +52,7 @@ type Request = {
 }
 ```
 
-### GraphQL over HTTP executor with `@whatwg-node/fetch`
+### GraphQL Over HTTP Executor With `@whatwg-node/fetch`
 
 Basic usage
 
@@ -81,7 +83,7 @@ export default async () => {
 }
 ```
 
-Authentication headers from context
+Authentication headers from the context
 
 ```js
 import { fetch } from '@whatwg-node/fetch'
@@ -112,15 +114,15 @@ export default async () => {
 }
 ```
 
-### Executor for subscriptions and more
+### Executor For Subscriptions and More
 
-Currently, the GraphQL over HTTP specification does specify how subscription operations can be executed. However, other protocols such as `graphql-ws` and `graphql-sse`, filled in the gap and allow the execution of query, mutation and subscription operations. We can define our custom executor for those protocols. It is also possible to define a hybrid executor that executes query and mutation operations over HTTP and subscription operation over a different protocol (WebSocket or SSE).
+Currently, the GraphQL over HTTP specification does specify how subscription operations can be executed. However, other protocols such as `graphql-ws` and `graphql-sse`, filled in the gap and allow the execution of query, mutation and subscription operations. We can define our custom executor for those protocols. It is also possible to define a hybrid executor that executes query and mutation operations over HTTP and subscription operations over a different protocol (WebSocket or SSE).
 
-#### GraphQL over WebSocket with `graphql-ws`
+#### GraphQL Over WebSocket With `graphql-ws`
 
 For the following example to work, the server must implement the [library's transport protocol](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md). Learn more about [`graphql-ws`](https://github.com/enisdenjo/graphql-ws).
 
-With this executor all operations (query, mutation and subscription) will be executed over `graphql-ws`.
+With this executor, all operations (query, mutation and subscription) will be executed over `graphql-ws`.
 
 ```ts
 import { wrapSchema, introspectSchema } from '@graphql-tools/wrap'
@@ -171,11 +173,11 @@ export default async () => {
 }
 ```
 
-#### GraphQL over SSE with `graphql-sse`
+#### GraphQL Over SSE With `graphql-sse`
 
 For the following example to work, the server must implement the [GraphQL over Server-Sent Events Protocol](https://github.com/enisdenjo/graphql-sse/blob/master/PROTOCOL.md). Learn more about [`graphql-sse`](https://github.com/enisdenjo/graphql-sse).
 
-With this executor all operations (query, mutation and subscription) will be executed over `graphql-sse`.
+With this executor, all operations (query, mutation and subscription) will be executed over `graphql-sse`.
 
 ```ts
 import { wrapSchema, introspectSchema } from '@graphql-tools/wrap'
@@ -233,11 +235,11 @@ export default async () => {
 }
 ```
 
-#### Hybrid GraphQL over HTTP and GraphQL over WebSocket (`graphql-ws`)
+#### Hybrid GraphQL Over HTTP and GraphQL Over WebSocket (`graphql-ws`)
 
-Sometimes you only want to do subscription operations over WebSocket. In that case you have identify the operation and then call the corresponding executor for the operation type.
+Sometimes you only want to do subscription operations over WebSocket. In that case, you have identified the operation and then call the corresponding executor for the operation type.
 
-With this executor query and mutation operations will be executed over HTTP (using `@whatwg-node/fetch`) and subscription operations will be executed WebSocket (using `graphql-ws`).
+With this executor query and mutation operations will be executed over HTTP (using `@whatwg-node/fetch`) and subscription operations will be executed via WebSocket (using `graphql-ws`).
 
 ```ts
 import { wrapSchema, introspectSchema } from '@graphql-tools/wrap'
@@ -348,9 +350,9 @@ const schema = wrapSchema({
 
 Transforms are further described within the [general schema wrapping section](/docs/schema-wrapping/). When using a schema configuration object, transforms should be placed as a property within the configuration, rather than as a separate argument to `wrapSchema`.
 
-Batching and caching can be accomplished by specifying customized executors that manage this for you. We export a `linkToExecutor` function in `@graphql-tools/links` package that can be used to transform the [`HTTPLinkDataloader`](https://github.com/prisma-labs/http-link-dataloader) Apollo-style link (created by Prisma) that will batch and cache all requests. Per request caching is a simple add-on, as the `executor` function is provided the context, so a global `executor` specified by wrapSchema can simply forward all arguments to a request-specific `executor` provided on the context.
+Batching and caching can be accomplished by specifying customized executors that manage this for you. We export a `linkToExecutor` function in `@graphql-tools/links` package that can be used to transform the [`HTTPLinkDataloader`](https://github.com/prisma-labs/http-link-dataloader) Apollo-style link (created by Prisma) that will batch and cache all requests. Per request caching is a simple add-on, as the `executor` function is provided in the context, so a global `executor` specified by `wrapSchema` can simply forward all arguments to a request-specific `executor` provided in the context.
 
-For users who need to customize the root proxying resolvers at the time that the wrapping schema is generated, you can also specify a custom `createProxyingResolver` function that will create your own root resolvers for the new outer, wrapping schema. This function has the following signature:
+For users who need to customize the root proxying resolvers at the time that the wrapping schema is generated, you can also specify a custom `createProxyingResolver` function that will create your root resolvers for the new outer, wrapping schema. This function has the following signature:
 
 ```ts
 export type CreateProxyingResolverFn = (options: ICreateProxyingResolverOptions) => GraphQLFieldResolver<any, any>
@@ -382,9 +384,9 @@ export function defaultCreateProxyingResolver({
 }
 ```
 
-Parenthetically, note that that `args` from the root field resolver are not directly passed to the target schema. These arguments have already been parsed into their corresponding internal values by the GraphQL execution algorithm. The correct, serialized form of the arguments are available within the `info` object, ready for proxying. Specifying the `args` property for `delegateToSchema` allows one to pass _additional_ arguments to the target schema, which is not necessary when creating a simple proxying schema.
+Parenthetically, note that `args` from the root field resolver are not directly passed to the target schema. These arguments have already been parsed into their corresponding internal values by the GraphQL execution algorithm. The correct, serialized form of the arguments is available within the `info` object, ready for proxying. Specifying the `args` property for `delegateToSchema` allows one to pass _additional_ arguments to the target schema, which is not necessary when creating a simple proxying schema.
 
-The above can can all be put together like this:
+The above can all be put together like this:
 
 ```ts
 import { wrapSchema } from '@graphql-tools/wrap'

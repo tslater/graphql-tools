@@ -1,15 +1,12 @@
----
-id: relay-operation-optimizer
-title: Optimizing operations using Relay Compiler
-sidebar_label: Relay Operation Optimizer
-type: Guide
----
+import { Callout, Instruction } from '@theguild/components'
+
+# Optimizing Operations Using Relay Compiler
 
 `@graphql-tools/relay-operation-optimizer` is a package for bringing the benefits of Relay Compiler to GraphQL tools. This package is used in [`flattenGeneratedTypes` feature of GraphQL Code Generator](https://graphql-code-generator.com/docs/plugins/relay-operation-optimizer).
 
 This package has been created by [Laurin Quast (n1ru4l)](https://github.com/n1ru4l) as [a GraphQL Code Generator plugin](https://github.com/n1ru4l/graphql-codegen-relay-plugins).
 
-### Current List of Features
+## Current List of Features
 
 - [Optimize Queries](https://relay.dev/docs/en/compiler-architecture#transforms) TL;DR: reduce query size
   - Inline Fragments
@@ -25,7 +22,10 @@ This package has been created by [Laurin Quast (n1ru4l)](https://github.com/n1ru
 
 ## Usage
 
-> Taken from the blog post [Optimizing your Apollo Operations with GraphQL Code Generator and the Relay Compiler](https://the-guild.dev/blog/graphql-codegen-relay-compiler).
+<Callout type="info">
+  Taken from the blog post [Optimizing your Apollo Operations with GraphQL Code Generator and the Relay
+  Compiler](https://the-guild.dev/blog/graphql-codegen-relay-compiler).
+</Callout>
 
 Let’s take a look at the following Fragment:
 
@@ -43,13 +43,16 @@ How would you reuse this fragment with different values for the `width` and `hei
 
 Previously there have been two ways:
 
+<Instruction>
 **1. Write a new fragment with different parameters**
 
-Well, just creating a new document for our avatar won’t really solve the reusability issue.
+Well, just creating a new document for our avatar won’t solve the reusability issue.
 
 **2. Use variables and rely on the query to have those defined**
 
-Actually, you can already use variables inside fragments. We just need to ensure that the query that uses the fragment also has those variables in the variable definition.
+You can already use variables inside fragments. We just need to ensure that the query that uses the fragment also has those variables in the variable definition.
+
+</Instruction>
 
 Fragment Definition:
 
@@ -75,7 +78,7 @@ query ProfileQuery($width: Int!, $height: Int!) {
 
 However, we now rely on having those parameters provided in each query that uses that fragment.
 
-This does not really make the fragment reusable. Imagine having a profile query of a with a friend list. The profile picture should be bigger than the ones of the friends.
+This does not make the fragment reusable. Imagine having a profile query with a friend list. The profile picture should be bigger than the ones of the friends.
 
 ```graphql
 query ProfileQuery($width: Int!, $height: Int!) {
@@ -90,9 +93,9 @@ query ProfileQuery($width: Int!, $height: Int!) {
 }
 ```
 
-It is basically impossible to use a different width and height for the second usage of the fragment in that query.
+It is impossible to use a different width and height for the second usage of the fragment in that query.
 
-Furthermore, when using different fragments you have to be really careful with your variable names, because of variable name clashes.
+Furthermore, when using different fragments you have to be careful with your variable names, because of variable name clashes.
 
 Given those limitations, it is pretty obvious that this “solution” does not scale well.
 
@@ -163,7 +166,7 @@ Pretty neat. This allows the query the be accepted by every GraphQL server (that
 
 **The `relay-compiler` is awesome!**
 
-It comes with a lot more transforms. Some of those are specific to the `relay-runtime` (which as the name says is executed in the browser of the user like react-apollo), but others are definitely also beneficial to non-relay users.
+It comes with a lot more transforms. Some of those are specific to the `relay-runtime` (which as the name says is executed in the browser of the user like react-apollo), but others are also beneficial to non-relay users.
 
 Besides the so-called `RelayApplyFragmentArgumentTransform` there is a bunch of more useful stuff.
 

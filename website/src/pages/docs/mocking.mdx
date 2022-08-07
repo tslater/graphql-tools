@@ -1,15 +1,12 @@
----
-id: mocking
-title: Mocking
-description: Mock your GraphQL data based on a schema.
-type: Guide
----
+import { Callout } from '@theguild/components'
 
-The strongly-typed nature of a GraphQL API lends itself extremely well to mocking. This is an important part of a GraphQL-First development process, because it enables frontend developers to build out UI components and features without having to wait for a backend implementation.
+# Mocking
+
+The strongly-typed nature of a GraphQL API lends itself extremely well to mocking. This is an important part of a GraphQL-First development process because it enables frontend developers to build out UI components and features without having to wait for a backend implementation.
 
 Even with a backend that is already built, mocking allows you to test your UI without waiting on slow database requests or building out a component harness with a tool like React Storybook.
 
-## Default mock example
+## Default Mock Example
 
 Let's take a look at how we can mock a GraphQL schema with just one line of code, using the default mocking logic you get out of the box with `graphql-tools`.
 
@@ -40,17 +37,20 @@ const query = /* GraphQL */ `
 
 graphql({
   schema: schemaWithMocks,
-  source: query,
+  source: query
 }).then(result => console.log('Got result', result))
 ```
 
-> Note: If your schema has custom scalar types, you still need to define the `__serialize`, `__parseValue`, and `__parseLiteral` functions, and pass them inside the second argument to `makeExecutableSchema`.
+<Callout type="info">
+  **Note**: If your schema has custom scalar types, you still need to define the `__serialize`, `__parseValue`, and
+  `__parseLiteral` functions, and pass them inside the second argument to `makeExecutableSchema`.
+</Callout>
 
-This mocking logic simply looks at your schema and makes sure to return a string where your schema has a string, a number for a number, etc. So you can already get the right shape of result. But if you want to use the mocks to do sophisticated testing, you will likely want to customize them to your particular data model.
+This mocking logic simply looks at your schema and makes sure to return a string where your schema has a string, a number for a number, etc. So you can already get the right shape result. But if you want to use the mocks to do sophisticated testing, you will likely want to customize them to your particular data model.
 
-## Customizing mocks
+## Customizing Mocks
 
-This is where the `mocks` option comes in, it's an object that describes your desired mocking logic. This is similar to the `resolverMap` in `makeExecutableSchema`, but has a few extra features aimed at mocking.
+This is where the `mocks` option comes in, it's an object that describes your desired mocking logic. This is similar to the `resolverMap` in `makeExecutableSchema` but has a few extra features aimed at mocking.
 
 It allows you to specify functions that are called for specific types in the schema, for example:
 
@@ -77,7 +77,7 @@ In this example, we are using [casual](https://github.com/boo1ean/casual), a fak
 
 ### Mocking Custom Scalar Types
 
-In order to Mock Custom Scalar Types, you need to declare them in your Schema. Let's look at an example for declaring DateTime Custom Scalar in our Schema:
+To Mock Custom Scalar Types, you need to declare them in your Schema. Let's look at an example for declaring DateTime Custom Scalar in our Schema:
 
 ```js
 const schema = /* GraphQL */ `
@@ -102,16 +102,18 @@ The next step is to define a function that returns a value (fixed or random) for
 
 Similarly, if you want to mock a **random** value for the Custom Scalar, you can use a library. We're using [casual](https://github.com/boo1ean/casual), as in the example above:
 
-/* prettier-ignore */
+/_ prettier-ignore _/
+
 ```js
 {
-  DateTime: () => casual.date(format = 'YYYY-MM-DDTHH:mm:ss.SSSZZ') // Output Example: 2011-11-11T11:43:31.000-0430
+  DateTime: () => casual.date((format = 'YYYY-MM-DDTHH:mm:ss.SSSZZ')) // Output Example: 2011-11-11T11:43:31.000-0430
 }
 ```
 
 The final step is to use the `mocks` object and `schema` to mock the server.
 
-/* prettier-ignore */
+/_ prettier-ignore _/
+
 ```js
 import { addMocksToSchema, mockServer } from '@graphql-tools/mock'
 // Mock object
@@ -119,7 +121,7 @@ const mocks = {
   Int: () => 6,
   Float: () => 22.1,
   String: () => 'Hello',
-  DateTime: () => casual.date(format = 'YYYY-MM-DDTHH:mm:ss.SSSZZ')
+  DateTime: () => casual.date((format = 'YYYY-MM-DDTHH:mm:ss.SSSZZ'))
 }
 const preserveResolvers = false
 // Mock the server passing the schema, mocks object and preserveResolvers arguments
@@ -132,11 +134,11 @@ const schemaWithMocks = addMocksToSchema({
 })
 ```
 
-Now, when you make a Query which response contains the DateTime Scalar Type, the DateTime function will return a value for it.
+Now, when you make a Query whose response contains the DateTime Scalar Type, the DateTime function will return a value for it.
 
-### Using lists in mocks
+### Using Lists In Mocks
 
-To define a mock for a list, simply return an empty array of the desired length as mock value for the field:
+To define a mock for a list, simply return an empty array of the desired length as a mock value for the field:
 
 ```js
 {
@@ -149,9 +151,9 @@ To define a mock for a list, simply return an empty array of the desired length 
 }
 ```
 
-#### Abstract types
+#### Abstract Types
 
-If you'd like to provide a mock for an `Union` or `Interface` type, you need to provide the type with an extra `__typename`.
+If you'd like to provide a mock for a `Union` or `Interface` type, you need to provide the type with an extra `__typename`.
 
 ```ts
 const typeDefs = /* GraphQL */ `
@@ -166,7 +168,7 @@ const mocks = {
 }
 ```
 
-### Applying mutations
+### Applying Mutations
 
 Use `resolvers` option of `addMocksToSchema` to implement custom resolvers that interact with the [`MockStore`](#mockstore), especially to mutate field values.
 
@@ -233,7 +235,7 @@ const server = mockServer(mySchema, mocks, preserveResolvers)
 const result = await server.query(query, variables)
 ```
 
-### Handling `*byId` fields
+### Handling `*byId` Fields
 
 By default, `*byId` (like `userById(id: ID!)`) field will return an entity that does not have the same `id` as the one queried. We can fix that:
 
@@ -261,11 +263,11 @@ const schemaWithMocks = addMocksToSchema({
 })
 ```
 
-Note that, by default, the `id` or `_id` field will be used as storage key and the store will make sure the storage key and the field value are equal. You can change the key field using the option `typePolicies`.
+Note that, by default, the `id` or `_id` field will be used as a storage key and the store will make sure the storage key and the field value are equal. You can change the key field using the option `typePolicies`.
 
-### Mocking a pagination
+### Mocking a Pagination
 
-The idea is that the [`MockStore`](#mockstore) contains the full list, as field value, and that the resolver queries the store and slice the result:
+The idea is that the [`MockStore`](#mockstore) contains the full list, as a field value, and that the resolver queries the store and slices the result:
 
 ```ts
 import { buildSchema } from 'graphql'
@@ -302,7 +304,7 @@ const schemaWithMocks = addMocksToSchema({
 })
 ```
 
-#### Relay-style pagination
+#### Relay-Style Pagination
 
 To mock a pagination that complies to [Relay-style pagination](https://relay.dev/graphql/connections.htm),
 you can use the provided helper [`relayStylePaginationMock`](/docs/api/modules/mock_src#relaystylepaginationmock):
@@ -345,11 +347,11 @@ const schemaWithMocks = addMocksToSchema({
 })
 ```
 
-## Mocking a schema using introspection
+## Mocking a Schema Using Introspection
 
 The GraphQL specification allows clients to introspect the schema with a [special set of types and fields](https://facebook.github.io/graphql/#sec-Introspection) that every schema must include. The results of a [standard introspection query](https://github.com/graphql/graphql-js/blob/master/src/utilities/introspectionQuery.js) can be used to generate an instance of GraphQLSchema which can be mocked as explained above.
 
-This helps when you need to mock a schema defined in a language other than JS, for example Go, Ruby, or Python.
+This helps when you need to mock a schema defined in a language other than JS. For example: Go, Ruby, or Python.
 
 To convert an [introspection query](https://github.com/graphql/graphql-js/blob/master/src/utilities/getIntrospectionQuery.js) result to a `GraphQLSchema` object, you can use the `buildClientSchema` utility from the `graphql` package.
 
@@ -413,7 +415,7 @@ your query with variables. **Note**: when executing queries from the returned se
 
 The `MockStore` is holding the generated mocks and can be used to access, generate or alter mocked values.
 
-You can access the `MockStore` either as argument of `resolvers` option of `addMocksToSchema`:
+You can access the `MockStore` either as an argument of `resolvers` option of `addMocksToSchema`:
 
 ```ts
 import { addMocksToSchema } from '@graphql-tools/mock'
@@ -466,7 +468,7 @@ store.get('User', 'abc-737dh-djdjd', 'organization')
 // { $ref: { key: 'acme', typeName: 'Organization' } }
 ```
 
-`Ref` can then be used, for example to get a field value given of a `Ref`:
+`Ref` can then be used, for example, to get a field value given by a `Ref`:
 
 ```ts
 const organizationRef = { $ref: { key: 'acme', typeName: 'Organization' } }
@@ -481,7 +483,7 @@ store.get('User', 'abc-737dh-djdjd', ['organization', 'name'])
 // `Acme Group`
 ```
 
-You can generate a entity reference `Ref` with:
+You can generate an entity reference `Ref` with:
 
 ```ts
 store.get('User', 'abc-737dh-djdjd')
@@ -506,13 +508,13 @@ store.get('User', '1', 'name')
 // 'Alexandre'
 ```
 
-If the field's output type is a `ObjectType` (or list of `ObjectType`), you can set a `Ref` (or array of `Ref`):
+If the field's output type is an `ObjectType` (or list of `ObjectType`), you can set a `Ref` (or array of `Ref`):
 
 ```ts
 store.set('User', '1', 'organization', store.get('Organization', 'acme'))
 ```
 
-You can use a `Ref` to set field name:
+You can use a `Ref` to set the field name:
 
 ```ts
 const organizationRef = { $ref: { key: 'acme', typeName: 'Organization' } }
@@ -556,12 +558,12 @@ store.get('User', '1', { name: 'Alexandre' }) // or store.set
 store.has('User', '1') // true
 ```
 
-## Migration from V7 and below
+## Migration from V7 and Below
 
-### Breaking change: Mock functions signature
+### Breaking Change: Mock Functions Signature
 
-Mock functions does not receive resolvers' source, arguments and context anymore. Use `resolvers` option of `addMocksToSchema`
-to define "true" resolvers that can intract with [`MockStore`](#mockstore).
+Mock functions do not receive resolvers' source, arguments and context anymore. Use `resolvers` option of `addMocksToSchema`
+to define "true" resolvers that can interact with [`MockStore`](#mockstore).
 
 Example:
 
@@ -615,9 +617,9 @@ const resolvers = (store) => ({
 const schemaWithMocks = addMocksToSchema({ schema, resolvers });
 ```
 
-### Breaking change: preserved resolvers source argument and abstract types mocking
+### Breaking Change: Preserved Resolvers Source Argument and Abstract Types Mocking
 
-When preserved, resolvers will not receive plain mock data anymore as source but rather a `Ref` that can be used to query the store:
+When preserved, resolvers will not receive plain mock data anymore as a source but rather a `Ref` that can be used to query the store:
 
 ```js
 // Previously:

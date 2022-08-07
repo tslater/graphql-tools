@@ -1,9 +1,6 @@
----
-id: documents-loading
-title: Loading GraphQL operation documents from different sources
-sidebar_label: Documents loading
-type: Guide
----
+import { Callout } from '@theguild/components'
+
+# Loading GraphQL Operation Documents From Different Sources
 
 Similar to schema loading - but meant to use for GraphQL documents (query/mutation/subscription/fragment).
 
@@ -47,14 +44,15 @@ const document4 = loadDocuments('./src/my-component.ts', {
 interface DocumentSource {
   document: DocumentNode // Object representation of GraphQL Content
   rawSDL: string // SDL in text
-  location: string // Way to access to that source
+  location: string // Way to access that source
 }
 ```
 
 `loadDocuments` takes in additional configuration via the `options` object (the second argument). There are some defaults to be aware of - to learn more, see [the full API documentation](/docs/api/modules/load/#loaddocuments).
 
-> You can learn more about [loaders](/docs/loaders) to load documents from different sources.
-
+<Callout type="info">
+  You can learn more about [loaders](/docs/loaders) to load documents from different sources.
+</Callout>
 ## Error handling
 
 ### No files found
