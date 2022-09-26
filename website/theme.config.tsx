@@ -29,7 +29,7 @@ const config: DocsThemeConfig = {
       <ToolsLogo className="mr-1.5 h-9 w-9" />
       <div>
         <h1 className="md:text-md text-sm font-medium">{SITE_NAME}</h1>
-        <h2 className="hidden text-xs sm:block">Now you can Rest with Sofa</h2>
+        <h2 className="hidden text-xs sm:block">A set of utilities for faster GraphQL development</h2>
       </div>
     </>
   ),
