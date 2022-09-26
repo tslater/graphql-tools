@@ -16,6 +16,10 @@ const FEATURE_LIST: IFeatureListProps['items'] = [
       loading: 'eager',
       placeholder: 'empty',
     },
+    link: {
+      children: 'Learn more',
+      href: '/docs/introduction',
+    },
   },
   {
     title: 'Mock your GraphQL API',
@@ -27,6 +31,10 @@ const FEATURE_LIST: IFeatureListProps['items'] = [
       loading: 'eager',
       placeholder: 'empty',
     },
+    link: {
+      children: 'Learn more',
+      href: '/docs/introduction',
+    },
   },
   {
     title: 'Stitch multiple schemas',
@@ -37,6 +45,10 @@ const FEATURE_LIST: IFeatureListProps['items'] = [
       alt: '',
       loading: 'eager',
       placeholder: 'empty',
+    },
+    link: {
+      children: 'Learn more',
+      href: '/docs/introduction',
     },
   },
 ];
