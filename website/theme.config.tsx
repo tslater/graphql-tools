@@ -1,29 +1,22 @@
-import { ToolsLogo } from '@theguild/components';
-// @ts-ignore
+/* eslint sort-keys: error */
+import { ToolsLogo, FooterExtended, mdxComponents, Header, Navbar } from '@theguild/components';
 import { DocsThemeConfig } from 'nextra-theme-docs';
 
 const SITE_NAME = 'GraphQL Tools';
 
 const config: DocsThemeConfig = {
-  titleSuffix: ` – ${SITE_NAME}`,
-  projectLink: 'https://github.com/ardatan/graphql-tools', // GitHub link in the navbar
-  docsRepositoryBase: 'https://github.com/ardatan/graphql-tools/tree/master/website/src/pages', // base URL for the docs repository
-  nextLinks: true,
-  prevLinks: true,
-  search: false,
-  floatTOC: true,
-  darkMode: true,
-  footer: false,
-  footerEditLink: 'Edit this page on GitHub',
-  logo: (
-    <>
-      <ToolsLogo className="mr-1.5 h-9 w-9" />
-      <div>
-        <h1 className="md:text-md text-sm font-medium">{SITE_NAME}</h1>
-        <h2 className="hidden text-xs sm:!block">A set of utilities for faster GraphQL development</h2>
-      </div>
-    </>
-  ),
+  components: mdxComponents,
+  docsRepositoryBase: 'https://github.com/ardatan/graphql-tools/tree/master/website/src/pages',
+  editLink: {
+    text: 'Edit this page on GitHub',
+  },
+  feedback: {
+    content: 'Question? Give us feedback →',
+    labels: 'kind/docs',
+  },
+  footer: {
+    component: <FooterExtended />,
+  },
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -31,10 +24,31 @@ const config: DocsThemeConfig = {
       <meta name="og:title" content={`${SITE_NAME}: documentation`} />
     </>
   ),
-  gitTimestamp: 'Last updated on',
-  defaultMenuCollapsed: true,
-  feedbackLink: 'Question? Give us feedback →',
-  feedbackLabels: 'kind/docs',
+  logo: (
+    <>
+      <ToolsLogo className="mr-1.5 h-9 w-9" />
+      <div>
+        <h1 className="md:text-md text-sm font-medium">{SITE_NAME}</h1>
+        <h2 className="hidden text-xs sm:block">Now you can Rest with Sofa</h2>
+      </div>
+    </>
+  ),
+  navbar: props => (
+    <>
+      <Header accentColor="#1cc8ee" themeSwitch searchBarProps={{ version: 'v2' }} />
+      <Navbar {...props} />
+    </>
+  ),
+  project: {
+    link: 'https://github.com/ardatan/graphql-tools',
+  },
+  search: {
+    component: null,
+  },
+  sidebar: {
+    defaultMenuCollapsed: true,
+  },
+  titleSuffix: ` – ${SITE_NAME}`,
 };
 
 export default config;

@@ -1,14 +1,13 @@
-import { withGuildDocs } from 'guild-docs/next.config'
+import { withGuildDocs } from '@theguild/components/next.config';
 
 export default withGuildDocs({
-  eslint: {
-    ignoreDuringBuilds: true,
+  images: {
+    unoptimized: true, // doesn't work with `next export`
   },
-  redirects: () => [
-    {
-      source: '/docs/introduction',
-      destination: '/docs',
+  redirects: () =>
+    Object.entries({}).map(([from, to]) => ({
+      source: from,
+      destination: to,
       permanent: true,
-    },
-  ],
-})
+    })),
+});
